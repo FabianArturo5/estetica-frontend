@@ -5,11 +5,15 @@ app_name = 'authentication'
 
 urlpatterns = [
     # Páginas HTML
+    path('', views.dashboard_page, name='dashboard'),  # Página principal del dashboard
     path('login/', views.login_page, name='login_page'),
     path('register/', views.register_page, name='register_page'),
     path('forgot-password/', views.forgot_password_page, name='forgot_password_page'),
+    path('change-password/', views.change_password_page, name='change_password_page'),
+    path('dashboard/', views.dashboard_page, name='dashboard_page'),
+    path('logout/', views.logout_page, name='logout_page'),  # URL para cerrar sesión directamente
     
-    # Endpoints API
+    # Endpoints API - IMPORTANTE: Las URLs de la API deben ir ANTES que las páginas HTML genéricas
     path('api/register/', views.register, name='register_api'),
     path('api/login/', views.login_view, name='login_api'),
     path('api/logout/', views.logout_view, name='logout_api'),
