@@ -1,0 +1,16 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=True
+      - FASTAPI_BASE_URL=http://fastapi:8000
+    volumes:
+      - .:/app
+    networks:
+      - estetica-backend_estetica_network # ← Nombre exacto de la red
+
+networks:
+  estetica-backend_estetica_network:
+    external: true

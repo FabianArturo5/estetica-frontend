@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .endpoints {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .endpoint {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 3px;
+        }
+        .btn {
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 5px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 {{ title }}</h1>
+        <p>Frontend Django - Conectado a FastAPI</p>
+        
+        <div class="endpoints">
+            <h3>Endpoints de Autenticación Disponibles:</h3>
+            
+            <div class="endpoint">
+                <strong>POST /auth/register/</strong> - Registrar usuario
+            </div>
+            <div class="endpoint">
+                <strong>POST /auth/login/</strong> - Iniciar sesión
+            </div>
+            <div class="endpoint">
+                <strong>POST /auth/logout/</strong> - Cerrar sesión
+            </div>
+            <div class="endpoint">
+                <strong>GET /auth/me/</strong> - Obtener usuario actual
+            </div>
+            <div class="endpoint">
+                <strong>PUT /auth/change-password/</strong> - Cambiar contraseña
+            </div>
+            <div class="endpoint">
+                <strong>POST /auth/forgot-password/</strong> - Recuperar contraseña
+            </div>
+        </div>
+
+        <div class="links">
+            <!-- En la sección de botones, cambia: -->
+<div class="links">
+    <a href="/auth/login/" class="btn btn-primary">Iniciar Sesión</a>
+    <a href="/auth/register/" class="btn btn-secondary">Registrarse</a>
+    <a href="/health/" class="btn btn-secondary">Health Check</a>
+</div>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 0.9em; color: #888;">
+            <p>FastAPI URL: <code id="fastapi-url">Cargando...</code></p>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar la URL de FastAPI configurada
+        document.getElementById('fastapi-url').textContent = '{{ FASTAPI_BASE_URL|default:"No configurada" }}';
+        
+        // Probar endpoints
+        async function testEndpoints() {
+            try {
+                const response = await fetch('/auth/api/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({test: true})
+                });
+                console.log('Endpoint /auth/login/ accesible');
+            } catch (error) {
+                console.log('Error accediendo a endpoints:', error);
+            }
+        }
+        
+        testEndpoints();
+    </script>
+</body>
+</html>
