@@ -37,13 +37,23 @@
 
         .container {
             background: white;
-            padding: 60px 50px;
             border-radius: 20px;
             box-shadow: 0 25px 80px rgba(46, 3, 68, 0.15);
-            text-align: center;
-            max-width: 800px;
+            max-width: 1200px;
             width: 100%;
             border: 1px solid var(--color-100);
+            display: grid;
+            grid-template-columns: 10% 80% 10%;
+            min-height: 600px;
+        }
+
+        .spacer-left, .spacer-right {
+            background: transparent;
+        }
+
+        .content {
+            padding: 60px 20px;
+            text-align: center;
         }
 
         .logo {
@@ -180,29 +190,6 @@
             border-top: 1px solid var(--color-200);
         }
 
-        .status-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 20px;
-            color: var(--color-600);
-            font-size: 14px;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #28a745;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
         .auth-status {
             background: var(--color-100);
             padding: 16px;
@@ -219,10 +206,13 @@
 
         @media (max-width: 768px) {
             .container {
-                padding: 40px 30px;
-                margin: 10px;
+                grid-template-columns: 5% 90% 5%;
             }
             
+            .content {
+                padding: 40px 15px;
+            }
+
             .logo h1 {
                 font-size: 36px;
             }
@@ -240,87 +230,80 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .status-section {
-                text-align: center;
+        @media (max-width: 480px) {
+            .container {
+                grid-template-columns: 0% 100% 0%;
             }
 
-            .status-item {
-                display: block;
-                margin: 10px 0;
+            .content {
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <h1>✨ Estética Lucy SYFAHG</h1>
-            <p>Sistema de Gestión Integral de Servicios Estéticos</p>
-        </div>
+        <div class="spacer-left"></div>
+        
+        <div class="content">
+            <div class="logo">
+                <h1>✨ Estética Lucy SYFAHG</h1>
+                <p>Sistema de Gestión Integral de Servicios Estéticos</p>
+            </div>
 
-        <div class="description">
-            Bienvenido al sistema de gestión más completo para centros de estética. 
-            Administra tus servicios, clientes y citas de manera eficiente y profesional.
-        </div>
+            <div class="description">
+                Bienvenido al sistema de gestión más completo para centros de estética. 
+                Administra tus servicios, clientes y citas de manera eficiente y profesional.
+            </div>
 
-        <div class="features">
-            <h3>🌟 Características Principales</h3>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">👥</div>
-                    <div class="feature-title">Gestión de Clientes</div>
-                    <div class="feature-desc">Administra perfiles y historial de tratamientos</div>
+            <div class="buttons">
+                <a href="/auth/login/" class="btn btn-primary">
+                    🔐 Iniciar Sesión
+                </a>
+                <a href="/auth/register/" class="btn btn-secondary">
+                    ✍️ Registrarse
+                </a>
+            </div>
+
+            <div class="features">
+                <h3>🌟 Características Principales</h3>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">👥</div>
+                        <div class="feature-title">Gestión de Clientes</div>
+                        <div class="feature-desc">Administra perfiles y historial de tratamientos</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📅</div>
+                        <div class="feature-title">Agenda Digital</div>
+                        <div class="feature-desc">Sistema de citas inteligente y recordatorios</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💆‍♀️</div>
+                        <div class="feature-title">Servicios</div>
+                        <div class="feature-desc">Catálogo completo de tratamientos estéticos</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Reportes</div>
+                        <div class="feature-desc">Analytics y estadísticas de negocio</div>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📅</div>
-                    <div class="feature-title">Agenda Digital</div>
-                    <div class="feature-desc">Sistema de citas inteligente y recordatorios</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">💆‍♀️</div>
-                    <div class="feature-title">Servicios</div>
-                    <div class="feature-desc">Catálogo completo de tratamientos estéticos</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Reportes</div>
-                    <div class="feature-desc">Analytics y estadísticas de negocio</div>
+            </div>
+
+            <div class="status-section">
+                <div id="authStatus" class="auth-status">
+                    <span id="authInfo"></span>
                 </div>
             </div>
         </div>
-
-        <div class="auth-status" id="authStatus">
-            <strong>Estado de Autenticación:</strong> <span id="authInfo">Verificando...</span>
-        </div>
-
-        <div class="buttons">
-            <a href="/auth/login/" class="btn btn-primary">
-                🔐 Iniciar Sesión
-            </a>
-            <a href="/auth/register/" class="btn btn-secondary">
-                ✍️ Registrarse
-            </a>
-        </div>
-
-        <div class="status-section">
-            <div class="status-item">
-                <div class="status-dot"></div>
-                <span>Sistema Activo</span>
-            </div>
-            <div class="status-item">
-                <div class="status-dot" style="background: #ffc107;"></div>
-                <span>API Conectada</span>
-            </div>
-            <div class="status-item">
-                <div class="status-dot" style="background: #17a2b8;"></div>
-                <span>Base de Datos Online</span>
-            </div>
-        </div>
+        
+        <div class="spacer-right"></div>
     </div>
 
     <script>
-        // Verificar estado de autenticación
         window.addEventListener('load', async function() {
             try {
                 const response = await fetch('/auth/api/me/');
@@ -360,7 +343,6 @@
             }
         });
 
-        // Animación de entrada suave
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.container').style.opacity = '0';
             document.querySelector('.container').style.transform = 'translateY(30px)';

@@ -65,9 +65,8 @@ def register(request):
                     status=400
                 )
         
-        # URL CORREGIDA
         response = requests.post(
-            get_fastapi_url('/register'),  # /api/auth/register
+            get_fastapi_url('/register'),
             json=data, 
             timeout=10
         )
@@ -95,9 +94,8 @@ def login_view(request):
                 status=400
             )
         
-        # URL CORREGIDA
         response = requests.post(
-            get_fastapi_url('/login'),  # /api/auth/login
+            get_fastapi_url('/login'),
             json=data, 
             timeout=10
         )
@@ -127,9 +125,8 @@ def logout_view(request):
         if not token:
             return JsonResponse({'detail': 'No autenticado'}, status=401)
         
-        # URL CORREGIDA
         response = requests.post(
-            get_fastapi_url('/logout'),  # /api/auth/logout
+            get_fastapi_url('/logout'),
             headers={'Authorization': f'Bearer {token}'},
             timeout=10
         )
@@ -138,7 +135,6 @@ def logout_view(request):
         return JsonResponse({'message': 'Sesión cerrada exitosamente'})
         
     except Exception as e:
-        # Siempre limpiar la sesión, incluso si hay error
         request.session.flush()
         return JsonResponse({'message': 'Sesión cerrada'})
 
@@ -156,9 +152,8 @@ def get_current_user(request):
         if not token:
             return JsonResponse({'detail': 'No autenticado'}, status=401)
         
-        # URL CORREGIDA
         response = requests.get(
-            get_fastapi_url('/me'),  # /api/auth/me
+            get_fastapi_url('/me'),
             headers={'Authorization': f'Bearer {token}'},
             timeout=10
         )
@@ -190,9 +185,8 @@ def change_password(request):
                     status=400
                 )
         
-        # URL CORREGIDA
         response = requests.put(
-            get_fastapi_url('/change-password'),  # /api/auth/change-password
+            get_fastapi_url('/change-password'),
             json=data,
             headers={'Authorization': f'Bearer {token}'},
             timeout=10
@@ -218,9 +212,9 @@ def forgot_password(request):
         if 'email' not in data:
             return JsonResponse({'detail': 'Email es requerido'}, status=400)
         
-        # URL CORREGIDA
+        # CORREGIDO: Usar guión en lugar de guión bajo
         response = requests.post(
-            get_fastapi_url('/forgot-password'),  # /api/auth/forgot-password
+            get_fastapi_url('/forgot-password'),  # Cambiado de /forgot_password a /forgot-password
             json=data,
             timeout=10
         )
@@ -250,9 +244,9 @@ def reset_password(request):
                     status=400
                 )
         
-        # URL CORREGIDA
+        # Este endpoint SÍ espera JSON body (a diferencia de verify-reset-code)
         response = requests.post(
-            get_fastapi_url('/reset-password'),  # /api/auth/reset-password
+            get_fastapi_url('/reset-password'),
             json=data,
             timeout=10
         )
@@ -280,10 +274,13 @@ def verify_reset_code(request):
                 status=400
             )
         
-        # URL CORREGIDA
+        # Enviar como query parameters en lugar de JSON body
         response = requests.post(
-            get_fastapi_url('/verify-reset-code'),  # /api/auth/verify-reset-code
-            json=data,
+            get_fastapi_url('/verify-reset-code'),
+            params={
+                'email': data['email'],
+                'reset_code': data['reset_code']
+            },
             timeout=10
         )
         
