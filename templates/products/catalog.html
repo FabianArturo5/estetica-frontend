@@ -89,9 +89,44 @@
             background: var(--color-300);
         }
 
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: var(--color-800);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .search-section {
@@ -259,6 +294,14 @@
             color: var(--color-500);
         }
 
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--color-200);
+        }
+
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -294,10 +337,108 @@
             display: none;
         }
 
+        .success {
+            background-color: #d1f2eb;
+            color: #0e7c5a;
+            border: 1px solid #7ee3c7;
+        }
+
         .error { 
             background-color: #fce8e6; 
             color: #d63031; 
             border: 1px solid #fab1a0;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(46, 3, 68, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--color-700);
+            font-size: 24px;
+        }
+
+        .close {
+            color: var(--color-600);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: var(--color-800);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--color-700);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--color-100);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-400);
+            box-shadow: 0 0 0 4px rgba(169, 39, 245, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
         }
 
         @media (max-width: 768px) {
@@ -321,13 +462,19 @@
             .stats-bar {
                 justify-content: center;
             }
+
+            .admin-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+    {% csrf_token %}
     <div class="navbar">
         <h1>Catálogo de Productos</h1>
         <div class="nav-actions">
+            <span id="adminBadge" style="display: none;" class="admin-badge">⭐ Administrador</span>
             <a href="{% url 'authentication:dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
         </div>
     </div>
@@ -345,6 +492,9 @@
                 >
                 <button class="btn btn-primary" onclick="searchProducts()">Buscar</button>
                 <button class="btn btn-secondary" onclick="clearSearch()">Limpiar</button>
+                <button id="btnCreateProduct" class="btn btn-success" onclick="openCreateModal()" style="display: none;">
+                    + Nuevo Producto
+                </button>
                 <label class="filter-toggle">
                     <input 
                         type="checkbox" 
@@ -373,26 +523,74 @@
         </div>
     </div>
 
+    <!-- Modal para crear/editar producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Producto</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Nombre del Producto *</label>
+                    <input type="text" id="productName" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Precio *</label>
+                    <input type="number" id="productPrice" name="precio" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Cantidad Disponible *</label>
+                    <input type="number" id="productStock" name="cantidad_disponible" min="0" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
     let allProducts = [];
+    let isAdmin = false;
+    let editingProductId = null;
 
-    window.addEventListener('load', function() {
-        loadProducts();
+    window.addEventListener('load', async function() {
+        await checkAdminStatus();
+        await loadProducts();
         
-        // Búsqueda en tiempo real
         document.getElementById('searchInput').addEventListener('input', function(e) {
             if (e.target.value.length > 2 || e.target.value.length === 0) {
                 searchProducts();
             }
         });
 
-        // Enter para buscar
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchProducts();
             }
         });
+
+        document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
     });
+
+    async function checkAdminStatus() {
+        try {
+            const response = await fetch('/auth/api/me/');
+            if (response.ok) {
+                const userData = await response.json();
+                isAdmin = userData.is_admin === true;
+                
+                if (isAdmin) {
+                    document.getElementById('adminBadge').style.display = 'inline-flex';
+                    document.getElementById('btnCreateProduct').style.display = 'inline-flex';
+                }
+            }
+        } catch (error) {
+            console.error('Error verificando estado de admin:', error);
+        }
+    }
 
     async function loadProducts() {
         try {
@@ -456,6 +654,16 @@
 
         container.innerHTML = products.map(product => {
             const stockStatus = getStockStatus(product.cantidad_disponible);
+            const adminActions = isAdmin ? `
+                <div class="admin-actions">
+                    <button class="btn btn-primary btn-small" onclick="openEditModal('${product.id}')">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="confirmDelete('${product.id}', '${product.nombre}')">
+                        Eliminar
+                    </button>
+                </div>
+            ` : '';
             
             return `
                 <div class="product-card">
@@ -481,9 +689,111 @@
                             <span class="info-value">${formatDate(product.created_at)}</span>
                         </div>
                     </div>
+                    ${adminActions}
                 </div>
             `;
         }).join('');
+    }
+
+    function openCreateModal() {
+        editingProductId = null;
+        document.getElementById('modalTitle').textContent = 'Nuevo Producto';
+        document.getElementById('productForm').reset();
+        document.getElementById('productModal').style.display = 'block';
+    }
+
+    function openEditModal(productId) {
+        editingProductId = productId;
+        const product = allProducts.find(p => p.id === productId);
+        
+        if (product) {
+            document.getElementById('modalTitle').textContent = 'Editar Producto';
+            document.getElementById('productName').value = product.nombre;
+            document.getElementById('productPrice').value = product.precio;
+            document.getElementById('productStock').value = product.cantidad_disponible;
+            document.getElementById('productModal').style.display = 'block';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('productModal').style.display = 'none';
+        document.getElementById('productForm').reset();
+        editingProductId = null;
+    }
+
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        const formData = {
+            nombre: document.getElementById('productName').value,
+            precio: parseFloat(document.getElementById('productPrice').value),
+            cantidad_disponible: parseInt(document.getElementById('productStock').value)
+        };
+
+        try {
+            let url, method;
+            
+            if (editingProductId) {
+                url = `/products/api/${editingProductId}/update/`;
+                method = 'PUT';
+            } else {
+                url = '/products/api/create/';
+                method = 'POST';
+            }
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage(
+                    editingProductId ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente',
+                    'success'
+                );
+                closeModal();
+                await loadProducts();
+            } else {
+                showMessage(data.detail || 'Error al guardar el producto', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showMessage('Error de conexión con el servidor', 'error');
+        }
+    }
+
+    function confirmDelete(productId, productName) {
+        if (confirm(`¿Estás seguro de que deseas eliminar "${productName}"?`)) {
+            deleteProduct(productId);
+        }
+    }
+
+    async function deleteProduct(productId) {
+        try {
+            const response = await fetch(`/products/api/${productId}/delete/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                }
+            });
+
+            if (response.ok) {
+                showMessage('Producto eliminado exitosamente', 'success');
+                await loadProducts();
+            } else {
+                const data = await response.json();
+                showMessage(data.detail || 'Error al eliminar el producto', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showMessage('Error de conexión con el servidor', 'error');
+        }
     }
 
     function getStockStatus(cantidad) {
@@ -524,6 +834,37 @@
         setTimeout(() => {
             messageDiv.style.display = 'none';
         }, 5000);
+    }
+
+    function getCSRFToken() {
+        // Primero intentar obtener del input hidden
+        let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            return csrfToken.value;
+        }
+        
+        // Si no existe, intentar obtener de las cookies
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue || '';
+    }
+
+    // Cerrar modal al hacer clic fuera de él
+    window.onclick = function(event) {
+        const modal = document.getElementById('productModal');
+        if (event.target === modal) {
+            closeModal();
+        }
     }
     </script>
 </body>
