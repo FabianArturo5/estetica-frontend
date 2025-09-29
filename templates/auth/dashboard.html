@@ -309,7 +309,7 @@
             <h2>¡Bienvenido a tu Dashboard!</h2>
             <p>Gestiona tu cuenta y configuraciones desde aquí</p>
         </div>
-
+        
         <div class="cards-grid">
             <div class="card">
                 <h3>
@@ -322,7 +322,16 @@
                     <a href="/auth/change-password/" class="btn btn-secondary">Cambiar Contraseña</a>
                 </div>
             </div>
-
+            <div class="card">
+                <h3>
+                    <div class="card-icon">📦</div>
+                    Catálogo de Productos
+                </h3>
+                <p>Consulta el inventario de productos disponibles, verifica stock y precios actualizados.</p>
+                <div class="card-actions">
+                    <a href="{% url 'products:catalog' %}" class="btn btn-primary">Ver Catálogo</a>
+                </div>
+            </div>
             <div class="card">
                 <h3>
                     <div class="card-icon">🔒</div>

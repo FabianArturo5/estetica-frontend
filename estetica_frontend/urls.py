@@ -4,6 +4,8 @@ from django.urls import path, include
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from authentication import views
+
 def home_view(request):
     """Vista de la página principal"""
     return render(request, 'index.html', {
@@ -20,4 +22,5 @@ urlpatterns = [
     path('', home_view, name='home'),  # Página principal
     path('health/', health_check, name='health_check'),
     path('auth/', include('authentication.urls')),  # Incluir las URLs de autenticación
-]
+    path('products/', include('products.urls')),
+    ]
