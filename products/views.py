@@ -144,3 +144,41 @@ def delete_product_api(request, product_id):
     except Exception as e:
         logger.error(f"Error en delete_product_api: {e}")
         return JsonResponse({'detail': str(e)}, status=500)
+    
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_product_images_api(request, product_id):
+    """API proxy para subir múltiples imágenes (solo admin)"""
+    try:
+        token = request.session.get('access_token')
+        if not token:
+            return JsonResponse({'detail': 'No autenticado'}, status=401)
+        
+        # Los archivos vienen en request.FILES
+        files = request.FILES.getlist('images')
+        
+        if not files:
+            return JsonResponse({'detail': 'No se enviaron imágenes'}, status=400)
+        
+        fastapi_url = getattr(settings, 'FASTAPI_BASE_URL', 'http://fastapi:8000')
+        url = f"{fastapi_url}/api/products/{product_id}/upload-images"
+        
+        # Preparar archivos para enviar a FastAPI
+        files_data = []
+        for file in files:
+            files_data.append(
+                ('files', (file.name, file.read(), file.content_type))
+            )
+        
+        response = requests.post(
+            url,
+            files=files_data,
+            headers={'Authorization': f'Bearer {token}'},
+            timeout=30
+        )
+        
+        return JsonResponse(response.json(), status=response.status_code)
+        
+    except Exception as e:
+        logger.error(f"Error en upload_product_images_api: {e}")
+        return JsonResponse({'detail': str(e)}, status=500)

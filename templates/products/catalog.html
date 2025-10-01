@@ -211,11 +211,22 @@
             box-shadow: 0 8px 30px rgba(46, 3, 68, 0.1);
             border: 1px solid var(--color-100);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(46, 3, 68, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            background: var(--color-50);
+            padding: 10px;
         }
 
         .product-header {
@@ -349,7 +360,6 @@
             border: 1px solid #fab1a0;
         }
 
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -360,6 +370,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s;
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -368,7 +379,7 @@
             padding: 30px;
             border-radius: 16px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             box-shadow: 0 20px 60px rgba(46, 3, 68, 0.3);
             animation: slideDown 0.3s;
         }
@@ -419,16 +430,22 @@
             font-size: 14px;
         }
 
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid var(--color-100);
             border-radius: 10px;
             font-size: 16px;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--color-400);
             box-shadow: 0 0 0 4px rgba(169, 39, 245, 0.1);
@@ -439,6 +456,151 @@
             gap: 10px;
             justify-content: flex-end;
             margin-top: 25px;
+        }
+
+        .detail-modal .modal-content {
+            max-width: 800px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .image-gallery {
+            position: relative;
+        }
+
+        .main-image-container {
+            width: 100%;
+            height: 350px;
+            background: var(--color-50);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .detail-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-thumbnails {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover {
+            border-color: var(--color-400);
+        }
+
+        .thumbnail.active {
+            border-color: var(--color-500);
+            box-shadow: 0 0 0 2px var(--color-200);
+        }
+
+        .zoom-overlay {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .zoom-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            cursor: zoom-out;
+        }
+
+        .zoom-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        .zoom-close:hover {
+            color: var(--color-300);
+        }
+
+        .preview-img-container {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            background: var(--color-50);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .preview-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 5px;
+        }
+
+        .preview-img-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .detail-info h3 {
+            color: var(--color-700);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .detail-description {
+            color: var(--color-600);
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -466,6 +628,10 @@
             .admin-actions {
                 flex-direction: column;
             }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -476,6 +642,14 @@
         <div class="nav-actions">
             <span id="adminBadge" style="display: none;" class="admin-badge">⭐ Administrador</span>
             <a href="{% url 'authentication:dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Zoom overlay -->
+    <div id="zoomOverlay" class="zoom-overlay" onclick="closeZoom()">
+        <span class="zoom-close">&times;</span>
+        <div class="zoom-content">
+            <img id="zoomImage" class="zoom-image" src="" alt="Zoom">
         </div>
     </div>
 
@@ -528,12 +702,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Nuevo Producto</h2>
-                <span class="close" onclick="closeModal()">&times;</span>
+                <span class="close" onclick="closeProductModal()">&times;</span>
             </div>
             <form id="productForm">
                 <div class="form-group">
                     <label for="productName">Nombre del Producto *</label>
                     <input type="text" id="productName" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Descripción</label>
+                    <textarea id="productDescription" name="descripcion" placeholder="Descripción del producto..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="productPrice">Precio *</label>
@@ -543,11 +721,58 @@
                     <label for="productStock">Cantidad Disponible *</label>
                     <input type="number" id="productStock" name="cantidad_disponible" min="0" required>
                 </div>
+                <div class="form-group">
+                    <label for="productImage">Imágenes del Producto (máx. 5)</label>
+                    <input type="file" id="productImage" accept="image/*" multiple onchange="previewImages(event)">
+                    <div id="imagePreview" style="margin-top: 15px; display: none;">
+                        <div id="previewGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;"></div>
+                    </div>
+                </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancelar</button>
                     <button type="submit" class="btn btn-primary" id="btnSubmit">Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal para ver detalles del producto -->
+    <div id="detailModal" class="modal detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalles del Producto</h2>
+                <span class="close" onclick="closeDetailModal()">&times;</span>
+            </div>
+            <div class="detail-grid">
+                <div class="image-gallery">
+                    <div class="main-image-container" onclick="openZoom()">
+                        <img id="detailImage" class="detail-image" src="" alt="Producto" style="cursor: zoom-in;">
+                    </div>
+                    <div id="imageThumbnails" class="image-thumbnails"></div>
+                </div>
+                <div class="detail-info">
+                    <h3 id="detailName"></h3>
+                    <p id="detailDescription" class="detail-description"></p>
+                    <div class="info-row">
+                        <span class="info-label">Precio</span>
+                        <span class="info-value price-value" id="detailPrice"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Stock disponible</span>
+                        <span class="info-value" id="detailStock"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Estado</span>
+                        <span id="detailStatus"></span>
+                    </div>
+                    <div id="detailAdminActions" style="display: none;">
+                        <div class="admin-actions">
+                            <button class="btn btn-primary" onclick="editFromDetail()">Editar</button>
+                            <button class="btn btn-danger" onclick="deleteFromDetail()">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -555,6 +780,10 @@
     let allProducts = [];
     let isAdmin = false;
     let editingProductId = null;
+    let viewingProductId = null;
+    let selectedFiles = [];
+    let currentImages = [];
+    let currentImageIndex = 0;
 
     window.addEventListener('load', async function() {
         await checkAdminStatus();
@@ -654,19 +883,24 @@
 
         container.innerHTML = products.map(product => {
             const stockStatus = getStockStatus(product.cantidad_disponible);
+            const imageUrl = product.imagenes && product.imagenes.length > 0 
+                ? `data:image/jpeg;base64,${product.imagenes[0]}` 
+                : '';
+            
             const adminActions = isAdmin ? `
                 <div class="admin-actions">
-                    <button class="btn btn-primary btn-small" onclick="openEditModal('${product.id}')">
+                    <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); openEditModal('${product.id}')">
                         Editar
                     </button>
-                    <button class="btn btn-danger btn-small" onclick="confirmDelete('${product.id}', '${product.nombre}')">
+                    <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); confirmDelete('${product.id}', '${product.nombre.replace(/'/g, "\\'")}')">
                         Eliminar
                     </button>
                 </div>
             ` : '';
             
             return `
-                <div class="product-card">
+                <div class="product-card" onclick="openDetailModal('${product.id}')">
+                    ${imageUrl ? `<img src="${imageUrl}" alt="${product.nombre}" class="product-image">` : '<div class="product-image"></div>'}
                     <div class="product-header">
                         <div>
                             <div class="product-name">${product.nombre}</div>
@@ -678,21 +912,126 @@
                     <div class="product-info">
                         <div class="info-row">
                             <span class="info-label">Precio</span>
-                            <span class="info-value price-value">$${product.precio.toFixed(2)}</span>
+                            <span class="info-value price-value">${product.precio.toFixed(2)}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Stock disponible</span>
                             <span class="info-value">${product.cantidad_disponible} unidades</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Registrado</span>
-                            <span class="info-value">${formatDate(product.created_at)}</span>
                         </div>
                     </div>
                     ${adminActions}
                 </div>
             `;
         }).join('');
+    }
+
+    async function openDetailModal(productId) {
+        try {
+            viewingProductId = productId;
+            const response = await fetch(`/products/api/${productId}/`);
+            
+            if (!response.ok) {
+                throw new Error('Error al cargar detalles del producto');
+            }
+            
+            const product = await response.json();
+            
+            document.getElementById('detailName').textContent = product.nombre;
+            document.getElementById('detailDescription').textContent = product.descripcion || 'Sin descripción';
+            document.getElementById('detailPrice').textContent = `${product.precio.toFixed(2)}`;
+            document.getElementById('detailStock').textContent = `${product.cantidad_disponible} unidades`;
+            
+            const stockStatus = getStockStatus(product.cantidad_disponible);
+            document.getElementById('detailStatus').innerHTML = `<span class="stock-badge ${stockStatus.class}">${stockStatus.text}</span>`;
+            
+            const imageUrl = product.imagenes && product.imagenes.length > 0 
+                ? `data:image/jpeg;base64,${product.imagenes[0]}` 
+                : '';
+            document.getElementById('detailImage').src = imageUrl;
+            document.getElementById('detailImage').alt = product.nombre;
+            
+            if (isAdmin) {
+                document.getElementById('detailAdminActions').style.display = 'block';
+            }
+            
+            document.getElementById('detailModal').style.display = 'block';
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showMessage('Error al cargar los detalles del producto', 'error');
+        }
+    }
+
+    function closeDetailModal() {
+        document.getElementById('detailModal').style.display = 'none';
+        viewingProductId = null;
+    }
+
+    function previewImages(event) {
+        const files = Array.from(event.target.files);
+        selectedFiles = files.slice(0, 5); // Máximo 5 imágenes
+        
+        console.log('Archivos seleccionados en preview:', selectedFiles.length);
+        
+        if (selectedFiles.length === 0) {
+            document.getElementById('imagePreview').style.display = 'none';
+            return;
+        }
+        
+        const previewGrid = document.getElementById('previewGrid');
+        previewGrid.innerHTML = '';
+        document.getElementById('imagePreview').style.display = 'block';
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const container = document.createElement('div');
+                container.className = 'preview-img-container';
+                container.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                    <button class="preview-img-remove" onclick="removePreviewImage(${index})" type="button">&times;</button>
+                `;
+                previewGrid.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removePreviewImage(index) {
+        selectedFiles.splice(index, 1);
+        const input = document.getElementById('productImage');
+        
+        // Recrear el evento para actualizar el preview
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        input.files = dt.files;
+        
+        previewImages({ target: input });
+    }
+
+    function openZoom() {
+        const mainImage = document.getElementById('detailImage');
+        if (mainImage.src) {
+            document.getElementById('zoomImage').src = mainImage.src;
+            document.getElementById('zoomOverlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeZoom() {
+        document.getElementById('zoomOverlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function editFromDetail() {
+        closeDetailModal();
+        openEditModal(viewingProductId);
+    }
+
+    function deleteFromDetail() {
+        const productName = document.getElementById('detailName').textContent;
+        closeDetailModal();
+        confirmDelete(viewingProductId, productName);
     }
 
     function openCreateModal() {
@@ -709,15 +1048,19 @@
         if (product) {
             document.getElementById('modalTitle').textContent = 'Editar Producto';
             document.getElementById('productName').value = product.nombre;
+            document.getElementById('productDescription').value = product.descripcion || '';
             document.getElementById('productPrice').value = product.precio;
             document.getElementById('productStock').value = product.cantidad_disponible;
             document.getElementById('productModal').style.display = 'block';
         }
     }
 
-    function closeModal() {
+    function closeProductModal() {
         document.getElementById('productModal').style.display = 'none';
         document.getElementById('productForm').reset();
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('previewGrid').innerHTML = '';
+        selectedFiles = [];
         editingProductId = null;
     }
 
@@ -726,9 +1069,12 @@
         
         const formData = {
             nombre: document.getElementById('productName').value,
+            descripcion: document.getElementById('productDescription').value || null,
             precio: parseFloat(document.getElementById('productPrice').value),
             cantidad_disponible: parseInt(document.getElementById('productStock').value)
         };
+
+        console.log('Archivos seleccionados:', selectedFiles.length);
 
         try {
             let url, method;
@@ -753,11 +1099,33 @@
             const data = await response.json();
 
             if (response.ok) {
-                showMessage(
-                    editingProductId ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente',
-                    'success'
-                );
-                closeModal();
+                const productId = data.id;
+                console.log('Producto guardado, ID:', productId);
+                
+                // Si hay imágenes seleccionadas, subirlas
+                if (selectedFiles && selectedFiles.length > 0) {
+                    console.log('Subiendo', selectedFiles.length, 'imágenes...');
+                    try {
+                        await uploadImages(productId);
+                        showMessage(
+                            editingProductId ? 'Producto e imágenes actualizados exitosamente' : 'Producto e imágenes creados exitosamente',
+                            'success'
+                        );
+                    } catch (imgError) {
+                        console.error('Error subiendo imágenes:', imgError);
+                        showMessage(
+                            'Producto guardado pero hubo un error al subir las imágenes: ' + imgError.message,
+                            'error'
+                        );
+                    }
+                } else {
+                    showMessage(
+                        editingProductId ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente',
+                        'success'
+                    );
+                }
+                
+                closeProductModal();
                 await loadProducts();
             } else {
                 showMessage(data.detail || 'Error al guardar el producto', 'error');
@@ -765,6 +1133,47 @@
         } catch (error) {
             console.error('Error:', error);
             showMessage('Error de conexión con el servidor', 'error');
+        }
+    }
+
+    async function uploadImages(productId) {
+        if (!selectedFiles || selectedFiles.length === 0) {
+            console.log('No hay archivos para subir');
+            return;
+        }
+        
+        console.log('Preparando FormData con', selectedFiles.length, 'archivos');
+        
+        try {
+            const formData = new FormData();
+            selectedFiles.forEach((file, index) => {
+                console.log(`Agregando archivo ${index}:`, file.name, file.type, file.size);
+                formData.append('images', file);
+            });
+            
+            console.log('Enviando petición a:', `/products/api/${productId}/upload-images/`);
+            
+            const response = await fetch(`/products/api/${productId}/upload-images/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: formData
+            });
+            
+            console.log('Respuesta del servidor:', response.status);
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Error al subir imágenes');
+            }
+            
+            const result = await response.json();
+            console.log('Imágenes subidas exitosamente:', result);
+            
+        } catch (error) {
+            console.error('Error en uploadImages:', error);
+            throw error;
         }
     }
 
@@ -837,13 +1246,11 @@
     }
 
     function getCSRFToken() {
-        // Primero intentar obtener del input hidden
         let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
         if (csrfToken) {
             return csrfToken.value;
         }
         
-        // Si no existe, intentar obtener de las cookies
         const name = 'csrftoken';
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -859,11 +1266,14 @@
         return cookieValue || '';
     }
 
-    // Cerrar modal al hacer clic fuera de él
     window.onclick = function(event) {
-        const modal = document.getElementById('productModal');
-        if (event.target === modal) {
-            closeModal();
+        const productModal = document.getElementById('productModal');
+        const detailModal = document.getElementById('detailModal');
+        if (event.target === productModal) {
+            closeProductModal();
+        }
+        if (event.target === detailModal) {
+            closeDetailModal();
         }
     }
     </script>
