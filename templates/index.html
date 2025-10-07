@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estética Lucy SYFAHG</title>
+    <title>Estética Lucy SYFAHG - Belleza & Bienestar</title>
     <style>
         :root {
             --color-50: #F5E7FE;
@@ -16,7 +16,6 @@
             --color-700: #65079C;
             --color-800: #490570;
             --color-900: #2C0344;
-            --color-950: #100118;
         }
 
         * {
@@ -26,332 +25,718 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--color-50);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #1a0b2e 100%);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Partículas flotantes de fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-400), transparent);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, -100px) rotate(90deg); }
+            50% { transform: translate(0, -200px) rotate(180deg); }
+            75% { transform: translate(-100px, -100px) rotate(270deg); }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(26, 11, 46, 0.8);
+            border-bottom: 1px solid rgba(211, 143, 250, 0.2);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: rotate3d 3s infinite ease-in-out;
+        }
+
+        @keyframes rotate3d {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-300), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 10px 30px rgba(158, 11, 244, 0.4);
+        }
+
+        .nav-btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(158, 11, 244, 0.6);
+        }
+
+        .nav-btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid var(--color-400);
+        }
+
+        .nav-btn-secondary:hover {
+            background: var(--color-400);
+            transform: translateY(-3px);
+        }
+
+        /* Hero Section */
+        .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 100px 50px 50px;
+            position: relative;
+            z-index: 1;
         }
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px rgba(46, 3, 68, 0.15);
+        .hero-content {
             max-width: 1200px;
             width: 100%;
-            border: 1px solid var(--color-100);
             display: grid;
-            grid-template-columns: 10% 80% 10%;
-            min-height: 600px;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
         }
 
-        .spacer-left, .spacer-right {
-            background: transparent;
+        .hero-text {
+            animation: fadeInLeft 1s ease;
         }
 
-        .content {
-            padding: 60px 20px;
-            text-align: center;
+        @keyframes fadeInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        .logo {
-            margin-bottom: 40px;
-        }
-
-        .logo h1 {
-            color: var(--color-700);
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--color-600), var(--color-500));
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--color-200));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            animation: textGlow 2s ease-in-out infinite;
         }
 
-        .logo p {
-            color: var(--color-600);
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 30px;
+        @keyframes textGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(211, 143, 250, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(211, 143, 250, 0.8)); }
         }
 
-        .description {
-            color: var(--color-700);
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .features {
-            background: var(--color-50);
-            padding: 30px;
-            border-radius: 16px;
-            margin: 40px 0;
-            border: 1px solid var(--color-200);
-        }
-
-        .features h3 {
-            color: var(--color-700);
+        .hero-subtitle {
             font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            color: var(--color-200);
+            margin-bottom: 30px;
+            font-weight: 300;
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
         }
 
-        .feature-item {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--color-200);
-            transition: all 0.3s ease;
-        }
-
-        .feature-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(169, 39, 245, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .feature-title {
-            color: var(--color-700);
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .feature-desc {
-            color: var(--color-600);
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .buttons {
+        .hero-cta {
             display: flex;
-            justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
-            margin: 40px 0;
         }
 
-        .btn {
-            padding: 16px 32px;
-            text-decoration: none;
-            border-radius: 12px;
+        .cta-btn {
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-size: 18px;
             font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            min-width: 160px;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--color-500) 0%, var(--color-600) 100%);
+        .cta-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 15px 50px rgba(158, 11, 244, 0.5);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 20px 60px rgba(158, 11, 244, 0.7);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: var(--color-700);
+            transform: translateY(-5px);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            animation: fadeInRight 1s ease;
+        }
+
+        @keyframes fadeInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .visual-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(158, 11, 244, 0.2), rgba(130, 9, 200, 0.2));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(211, 143, 250, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .card-1 {
+            top: 0;
+            right: 0;
+            width: 300px;
+            animation-delay: 0s;
+        }
+
+        .card-2 {
+            bottom: 50px;
+            left: 0;
+            width: 280px;
+            animation-delay: 2s;
+        }
+
+        .card-3 {
+            top: 50%;
+            right: 50px;
+            width: 250px;
+            animation-delay: 4s;
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
             color: white;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--color-600) 0%, var(--color-700) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(169, 39, 245, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--color-200);
-            color: var(--color-800);
-        }
-
-        .btn-secondary:hover {
-            background: var(--color-300);
-            transform: translateY(-2px);
-        }
-
-        .status-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--color-200);
-        }
-
-        .auth-status {
-            background: var(--color-100);
-            padding: 16px;
-            border-radius: 12px;
-            margin: 20px 0;
+        .card-text {
             font-size: 14px;
-            color: var(--color-700);
-            display: none;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
         }
 
-        .auth-status.show {
+        /* Services Section */
+        .services {
+            padding: 100px 50px;
+            background: linear-gradient(180deg, transparent, rgba(158, 11, 244, 0.1));
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, white, var(--color-300));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 60px;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(158, 11, 244, 0.15), rgba(130, 9, 200, 0.15));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(211, 143, 250, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(211, 143, 250, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 70px rgba(158, 11, 244, 0.5);
+        }
+
+        .service-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
             display: block;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 5% 90% 5%;
-            }
-            
-            .content {
-                padding: 40px 15px;
-            }
+        .service-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
 
-            .logo h1 {
-                font-size: 36px;
-            }
-            
-            .buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 280px;
-            }
+        .service-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+        }
 
-            .features-grid {
+        /* Stats Section */
+        .stats {
+            padding: 80px 50px;
+            background: linear-gradient(135deg, rgba(158, 11, 244, 0.2), rgba(130, 9, 200, 0.2));
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            animation: countUp 2s ease;
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-300), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 50px;
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--color-600), var(--color-700));
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(158, 11, 244, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+        }
+
+        .cta-box h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-box p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 50px;
+            text-align: center;
+            border-top: 1px solid rgba(211, 143, 250, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
                 grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 48px;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .visual-container {
+                height: 400px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 14px;
             }
         }
 
-        @media (max-width: 480px) {
-            .container {
-                grid-template-columns: 0% 100% 0%;
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 36px;
             }
 
-            .content {
-                padding: 30px 20px;
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .cta-btn {
+                width: 100%;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="spacer-left"></div>
-        
-        <div class="content">
-            <div class="logo">
-                <h1>✨ Estética Lucy SYFAHG</h1>
-                <p>Sistema de Gestión Integral de Servicios Estéticos</p>
-            </div>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
 
-            <div class="description">
-                Bienvenido al sistema de gestión más completo para centros de estética. 
-                Administra tus servicios, clientes y citas de manera eficiente y profesional.
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo-nav">
+            <div class="logo-icon">✨</div>
+            <div class="logo-text">Lucy SYFAHG</div>
+        </div>
+        <div class="nav-links">
+            <a href="/auth/login/" class="nav-btn nav-btn-secondary">Iniciar Sesión</a>
+            <a href="/auth/register/" class="nav-btn nav-btn-primary">Registrarse</a>
+        </div>
+    </nav>
 
-            <div class="buttons">
-                <a href="/auth/login/" class="btn btn-primary">
-                    🔐 Iniciar Sesión
-                </a>
-                <a href="/auth/register/" class="btn btn-secondary">
-                    ✍️ Registrarse
-                </a>
-            </div>
-
-            <div class="features">
-                <h3>🌟 Características Principales</h3>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">👥</div>
-                        <div class="feature-title">Gestión de Clientes</div>
-                        <div class="feature-desc">Administra perfiles y historial de tratamientos</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">📅</div>
-                        <div class="feature-title">Agenda Digital</div>
-                        <div class="feature-desc">Sistema de citas inteligente y recordatorios</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">💆‍♀️</div>
-                        <div class="feature-title">Servicios</div>
-                        <div class="feature-desc">Catálogo completo de tratamientos estéticos</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">📊</div>
-                        <div class="feature-title">Reportes</div>
-                        <div class="feature-desc">Analytics y estadísticas de negocio</div>
-                    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Tu Belleza, Nuestra Pasión</h1>
+                <p class="hero-subtitle">Experiencia Premium en Servicios Estéticos</p>
+                <p class="hero-description">
+                    Descubre un mundo de belleza y bienestar. En Estética Lucy SYFAHG transformamos 
+                    tu experiencia con tecnología de vanguardia y atención personalizada.
+                </p>
+                <div class="hero-cta">
+                    <a href="/auth/register/" class="cta-btn cta-primary">
+                        Comenzar Ahora →
+                    </a>
+                    <a href="/products/" class="cta-btn cta-secondary">
+                        Ver Productos
+                    </a>
                 </div>
             </div>
-
-            <div class="status-section">
-                <div id="authStatus" class="auth-status">
-                    <span id="authInfo"></span>
+            <div class="hero-visual">
+                <div class="visual-container">
+                    <div class="floating-card card-1">
+                        <div class="card-icon">💆‍♀️</div>
+                        <div class="card-title">Tratamientos Faciales</div>
+                        <div class="card-text">Rejuvenece tu piel con nuestros tratamientos especializados</div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="card-icon">💅</div>
+                        <div class="card-title">Manicure & Pedicure</div>
+                        <div class="card-text">Luce unas manos y pies impecables</div>
+                    </div>
+                    <div class="floating-card card-3">
+                        <div class="card-icon">💇‍♀️</div>
+                        <div class="card-title">Estilismo Profesional</div>
+                        <div class="card-text">Tu look perfecto está aquí</div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="spacer-right"></div>
-    </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <p class="section-subtitle">Soluciones integrales para tu belleza y bienestar</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <span class="service-icon">✨</span>
+                <h3 class="service-title">Tratamientos Faciales</h3>
+                <p class="service-description">
+                    Limpieza profunda, hidratación y rejuvenecimiento con productos premium
+                </p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">💇‍♀️</span>
+                <h3 class="service-title">Estilismo & Color</h3>
+                <p class="service-description">
+                    Cortes modernos y técnicas de color avanzadas para tu estilo único
+                </p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">💅</span>
+                <h3 class="service-title">Manicure & Pedicure</h3>
+                <p class="service-description">
+                    Cuidado completo de manos y pies con diseños exclusivos
+                </p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">🧖‍♀️</span>
+                <h3 class="service-title">Spa & Masajes</h3>
+                <p class="service-description">
+                    Relájate y renueva tu energía con nuestras terapias corporales
+                </p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">💄</span>
+                <h3 class="service-title">Maquillaje Profesional</h3>
+                <p class="service-description">
+                    Look perfecto para cualquier ocasión especial
+                </p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">🌟</span>
+                <h3 class="service-title">Tratamientos Corporales</h3>
+                <p class="service-description">
+                    Moldea y tonifica tu figura con tecnología de última generación
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">5000+</div>
+                <div class="stat-label">Clientes Satisfechos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Años de Experiencia</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Servicios Disponibles</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Tasa de Satisfacción</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>¿Lista para Transformarte?</h2>
+            <p>Únete a miles de clientas satisfechas y comienza tu viaje hacia la belleza perfecta</p>
+            <a href="/auth/register/" class="cta-btn cta-primary" style="position: relative; z-index: 2;">
+                Reservar Cita Ahora
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Estética Lucy SYFAHG. Todos los derechos reservados.</p>
+    </footer>
 
     <script>
-        window.addEventListener('load', async function() {
-            try {
-                const response = await fetch('/auth/api/me/');
-                const authStatusDiv = document.getElementById('authStatus');
-                const authInfoSpan = document.getElementById('authInfo');
-                
-                if (response.ok) {
-                    const userData = await response.json();
-                    authInfoSpan.innerHTML = `
-                        ✅ <strong>Conectado como:</strong> ${userData.full_name || userData.email}
-                        <br>
-                        <a href="/auth/dashboard/" style="color: var(--color-600); text-decoration: none; font-weight: 600;">
-                            🏠 Ir al Dashboard
-                        </a>
-                        |
-                        <a href="/auth/logout/" style="color: var(--color-600); text-decoration: none; font-weight: 600;">
-                            🚪 Cerrar Sesión
-                        </a>
-                    `;
-                    authStatusDiv.style.background = '#d1f2eb';
-                    authStatusDiv.style.borderLeft = '4px solid #28a745';
-                } else {
-                    authInfoSpan.textContent = '❌ No autenticado';
-                    authStatusDiv.style.background = '#fff3cd';
-                    authStatusDiv.style.borderLeft = '4px solid #ffc107';
-                }
-                
-                authStatusDiv.classList.add('show');
-                
-            } catch (error) {
-                const authStatusDiv = document.getElementById('authStatus');
-                const authInfoSpan = document.getElementById('authInfo');
-                authInfoSpan.textContent = '⚠️ Error verificando estado de autenticación';
-                authStatusDiv.style.background = '#f8d7da';
-                authStatusDiv.style.borderLeft = '4px solid #dc3545';
-                authStatusDiv.classList.add('show');
-            }
-        });
+        // Crear partículas flotantes
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 100 + 50 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.container').style.opacity = '0';
-            document.querySelector('.container').style.transform = 'translateY(30px)';
-            
-            setTimeout(() => {
-                document.querySelector('.container').style.transition = 'all 0.6s ease';
-                document.querySelector('.container').style.opacity = '1';
-                document.querySelector('.container').style.transform = 'translateY(0)';
-            }, 100);
+        // Animación de scroll suave para las cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.service-card, .stat-item').forEach(el => {
+            observer.observe(el);
         });
     </script>
 </body>
