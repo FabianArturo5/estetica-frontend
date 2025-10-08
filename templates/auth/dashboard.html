@@ -572,17 +572,20 @@
                     <button class="btn btn-primary" onclick="showSettings()">Configurar →</button>
                 </div>
             </div>
-
             <div class="card">
                 <h3>
-                    <div class="card-icon">🌟</div>
-                    Servicios
+                    <div class="card-icon">🎨</div>
+                    Trabajos Realizados
                 </h3>
-                <p>Explora nuestros servicios de estética y bienestar. Reserva tu cita y transforma tu look.</p>
+                <p>Gestiona tu galería de trabajos realizados. Agrega nuevos proyectos, edita existentes y destaca tus mejores trabajos.</p>
                 <div class="card-actions">
-                    <button class="btn btn-primary" onclick="showServices()">Ver Servicios →</button>
+                    <a href="{% url 'jobs:admin_trabajos' %}" class="btn btn-primary" id="adminTrabajosBtn" style="display: none;">
+                        Administrar Trabajos →
+                    </a>
+                    <a href="{% url 'jobs:galeria' %}" class="btn btn-secondary">Ver Galería</a>
                 </div>
             </div>
+
         </div>
 
         <div class="stats-section">
@@ -619,7 +622,44 @@
         loadStats();
         createParticles();
     });
+    // Verificar si el usuario es admin y mostrar botones correspondientes
+    async function checkAdminStatus() {
+        try {
+            const response = await fetch('/auth/api/me/', {
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                }
+            });
+            
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('User data:', userData); // Debug
+                
+                const isAdmin = userData.is_admin === true;
+                console.log('Is admin:', isAdmin); // Debug
+                
+                if (isAdmin) {
+                    const adminBtn = document.getElementById('adminTrabajosBtn');
+                    if (adminBtn) {
+                        adminBtn.style.display = 'inline-flex';
+                        console.log('Admin button shown'); // Debug
+                    }
+                }
+            } else {
+                console.error('Error getting user data:', response.status);
+            }
+        } catch (error) {
+            console.error('Error verificando estado de admin:', error);
+        }
+    }
 
+    // IMPORTANTE: Llamar DESPUÉS de cargar el usuario
+    window.addEventListener('load', async function() {
+        await loadUserInfo();
+        await checkAdminStatus(); // ← Asegúrate de esperar
+        loadStats();
+        createParticles();
+    });
     // Crear partículas flotantes
     function createParticles() {
         const particlesContainer = document.getElementById('particles');

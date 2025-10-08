@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'products',
+    'jobs',
 ]
 
 MIDDLEWARE = [
@@ -177,3 +178,8 @@ SESSION_COOKIE_AGE = 3600
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# O si prefieres usar los nombres de las URLs:
+LOGIN_URL = 'auth:login'
+LOGIN_REDIRECT_URL = 'auth:dashboard'
+LOGOUT_REDIRECT_URL = 'home'

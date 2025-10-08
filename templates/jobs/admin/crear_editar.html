@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if trabajo %}Editar{% else %}Crear{% endif %} Trabajo - Estética Lucy SYFAHG</title>
+    <style>
+        :root {
+            --color-50: #F5E7FE;
+            --color-100: #E4BBFC;
+            --color-200: #D38FFA;
+            --color-300: #C163F8;
+            --color-400: #A927F5;
+            --color-500: #9E0BF4;
+            --color-600: #8209C8;
+            --color-700: #65079C;
+            --color-800: #490570;
+            --color-900: #2C0344;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #2C0344;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 120px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: white;
+            border-bottom: 1px solid rgba(158, 11, 244, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-icon-nav {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-300), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 10px 30px rgba(158, 11, 244, 0.4);
+        }
+
+        .nav-btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(158, 11, 244, 0.6);
+        }
+
+        .nav-btn-secondary {
+            background: transparent;
+            color: var(--color-600);
+            border: 2px solid var(--color-400);
+        }
+
+        .nav-btn-secondary:hover {
+            background: var(--color-50);
+            border-color: var(--color-500);
+            transform: translateY(-2px);
+        }
+
+        /* Partículas flotantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-400), transparent);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, -100px) rotate(90deg); }
+            50% { transform: translate(0, -200px) rotate(180deg); }
+            75% { transform: translate(-100px, -100px) rotate(270deg); }
+        }
+
+        /* Form container */
+        .form-container {
+            background: white;
+            border: 1px solid rgba(158, 11, 244, 0.1);
+            padding: 50px 45px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--color-600), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-subtitle {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            color: #1f2937;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--color-400);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(169, 39, 245, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Image upload section */
+        .image-upload-section {
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .image-upload-section.drag-over {
+            border-color: var(--color-400);
+            background: var(--color-50);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #9ca3af;
+        }
+
+        .upload-text {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-upload:hover {
+            background: linear-gradient(135deg, var(--color-600), var(--color-700));
+            transform: translateY(-2px);
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-preview {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .image-remove:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .existing-images {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .existing-images-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        /* Form actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 4px 15px rgba(158, 11, 244, 0.25);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--color-600), var(--color-700));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(158, 11, 244, 0.35);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f9fafb;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .message {
+            padding: 16px 20px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .success { 
+            background: #d1fae5;
+            color: #065f46; 
+            border: 1px solid #10b981;
+        }
+
+        .error { 
+            background: #fee2e2;
+            color: #991b1b; 
+            border: 1px solid #ef4444;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 30px 50px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+            background: white;
+            z-index: 1;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--color-300);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-500);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .logo-icon-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .form-container {
+                padding: 40px 30px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 15px 20px;
+            }
+
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="logo-nav">
+            <div class="logo-icon-nav">✨</div>
+            <div class="logo-text">Lucy SYFAHG</div>
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'jobs:admin_trabajos' %}" class="nav-btn nav-btn-secondary">← Volver</a>
+            <a href="{% url 'jobs:galeria' %}" class="nav-btn nav-btn-primary">Ver Galería</a>
+        </div>
+    </nav>
+
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+
+    <div class="main-content">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">
+                    {% if trabajo %}Editar Trabajo{% else %}Crear Nuevo Trabajo{% endif %}
+                </h1>
+                <p class="form-subtitle">
+                    {% if trabajo %}
+                    Actualiza la información y las imágenes de tu trabajo
+                    {% else %}
+                    Agrega un nuevo trabajo a tu galería de proyectos realizados
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Mensajes -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form id="trabajoForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="titulo">📝 Título del Trabajo *</label>
+                    <input type="text" id="titulo" name="titulo" required 
+                           minlength="3" maxlength="200"
+                           value="{{ trabajo.titulo|default:'' }}"
+                           placeholder="Ej: Maquillaje de novia clásico">
+                    <small style="color: #6b7280; font-size: 12px; margin-top: 5px; display: block;">
+                        Mínimo 3 caracteres, máximo 200
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">📂 Categoría *</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Selecciona una categoría</option>
+                        {% for cat in categorias %}
+                        <option value="{{ cat.value }}" 
+                                {% if trabajo.categoria == cat.value %}selected{% endif %}>
+                            {{ cat.label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">📄 Descripción</label>
+                    <textarea id="descripcion" name="descripcion" 
+                              minlength="0" maxlength="2000"
+                              placeholder="Describe el trabajo realizado, técnicas utilizadas, etc.">{{ trabajo.descripcion|default:'' }}</textarea>
+                    <small style="color: #6b7280; font-size: 12px; margin-top: 5px; display: block;">
+                        Máximo 2000 caracteres (<span id="charCount">0</span>/2000)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_realizacion">📅 Fecha de Realización</label>
+                    <input type="date" id="fecha_realizacion" name="fecha_realizacion"
+                           value="{{ trabajo.fecha_realizacion|date:'Y-m-d'|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">🏷️ Etiquetas</label>
+                    <input type="text" id="tags" name="tags" 
+                           value="{{ trabajo.tags_str|default:'' }}"
+                           placeholder="Separadas por comas: maquillaje, novia, clásico">
+                    <small style="color: #6b7280; font-size: 12px; margin-top: 5px; display: block;">
+                        Las etiquetas ayudan a los usuarios a encontrar tu trabajo más fácilmente
+                    </small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="destacado" name="destacado" 
+                           {% if trabajo.destacado %}checked{% endif %}>
+                    <label for="destacado">⭐ Marcar como trabajo destacado</label>
+                </div>
+
+                <!-- Sección de subida de imágenes -->
+                <div class="form-group">
+                    <label>🖼️ Imágenes del Trabajo</label>
+                    
+                    <!-- Área de subida -->
+                    <div class="image-upload-section" id="uploadArea">
+                        <div class="upload-icon">📷</div>
+                        <p class="upload-text">
+                            Arrastra y suelta imágenes aquí o haz clic para seleccionar
+                        </p>
+                        <button type="button" class="btn-upload" onclick="document.getElementById('imagenes').click()">
+                            📁 Seleccionar Imágenes
+                        </button>
+                        <input type="file" id="imagenes" name="imagenes" class="file-input" 
+                               accept="image/*" multiple onchange="previewImages(event)">
+                        <small style="color: #6b7280; margin-top: 10px; display: block;">
+                            Máximo 10 imágenes por trabajo. Formatos: JPG, PNG, WebP
+                        </small>
+                    </div>
+
+                    <!-- Vista previa de nuevas imágenes -->
+                    <div id="imagePreview" class="image-preview-grid" style="display: none;"></div>
+
+                    <!-- Imágenes existentes (solo en edición) -->
+                    {% if trabajo and trabajo.imagenes %}
+                    <div class="existing-images">
+                        <h4 class="existing-images-title">Imágenes Actuales</h4>
+                        <div class="image-preview-grid" id="existingImages">
+                            {% for imagen in trabajo.imagenes %}
+                            <div class="image-preview">
+                                <img src="data:image/jpeg;base64,{{ imagen }}" alt="Imagen {{ forloop.counter }}">
+                                <button type="button" class="image-remove" 
+                                        onclick="removeExistingImage({{ forloop.counter0 }})">×</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'jobs:admin_trabajos' %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        {% if trabajo %}💾 Actualizar Trabajo{% else %}✨ Crear Trabajo{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>© 2025 Lucy SYFAHG. Todos los derechos reservados.</div>
+            <div class="footer-links">
+                <a href="/terminos">Términos</a>
+                <a href="/privacidad">Privacidad</a>
+                <a href="/contacto">Contacto</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Crear partículas
+    window.addEventListener('load', function() {
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 100 + 50 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+    });
+
+    // Mostrar mensajes después de cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(msg => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }, 5000);
+        });
+        
+        // Inicializar contador de caracteres
+        updateCharCount();
+    });
+
+    let selectedFiles = [];
+
+    // Drag and drop functionality
+    const uploadArea = document.getElementById('uploadArea');
+    
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', function() {
+        uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        selectedFiles = Array.from(files).slice(0, 10);
+        previewImages({ target: { files: selectedFiles } });
+    }
+
+    function previewImages(event) {
+        const files = Array.from(event.target.files || selectedFiles);
+        selectedFiles = files.slice(0, 10);
+        
+        const previewContainer = document.getElementById('imagePreview');
+        
+        if (selectedFiles.length === 0) {
+            previewContainer.style.display = 'none';
+            return;
+        }
+        
+        previewContainer.innerHTML = '';
+        previewContainer.style.display = 'grid';
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                    <button type="button" class="image-remove" onclick="removePreviewImage(${index})">×</button>
+                `;
+                previewContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removePreviewImage(index) {
+        selectedFiles.splice(index, 1);
+        const input = document.getElementById('imagenes');
+        
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        input.files = dt.files;
+        
+        previewImages({ target: input });
+    }
+
+    function removeExistingImage(imageIndex) {
+        if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
+            const trabajoId = '{{ trabajo.id }}';
+            
+            fetch(`/jobs/admin/trabajo/${trabajoId}/imagen/${imageIndex}/eliminar/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error al eliminar la imagen');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error de conexión');
+            });
+        }
+    }
+
+    // Validación del formulario
+    document.getElementById('trabajoForm').addEventListener('submit', function(e) {
+        const titulo = document.getElementById('titulo').value.trim();
+        const categoria = document.getElementById('categoria').value;
+        const submitBtn = document.getElementById('submitBtn');
+        
+        if (!titulo) {
+            e.preventDefault();
+            alert('❌ Por favor, ingresa un título para el trabajo');
+            document.getElementById('titulo').focus();
+            return;
+        }
+        
+        if (titulo.length < 3) {
+            e.preventDefault();
+            alert('❌ El título debe tener al menos 3 caracteres');
+            document.getElementById('titulo').focus();
+            return;
+        }
+        
+        if (titulo.length > 200) {
+            e.preventDefault();
+            alert('❌ El título no puede exceder los 200 caracteres');
+            document.getElementById('titulo').focus();
+            return;
+        }
+        
+        if (!categoria) {
+            e.preventDefault();
+            alert('❌ Por favor, selecciona una categoría');
+            document.getElementById('categoria').focus();
+            return;
+        }
+
+        // Mostrar loading
+        submitBtn.innerHTML = '⏳ Guardando...';
+        submitBtn.disabled = true;
+    });
+    
+    // Contador de caracteres para descripción
+    const descripcionInput = document.getElementById('descripcion');
+    const charCount = document.getElementById('charCount');
+    
+    function updateCharCount() {
+        const length = descripcionInput.value.length;
+        charCount.textContent = length;
+        if (length > 2000) {
+            charCount.style.color = '#ef4444';
+            charCount.style.fontWeight = 'bold';
+        } else if (length > 1800) {
+            charCount.style.color = '#f59e0b';
+            charCount.style.fontWeight = '600';
+        } else {
+            charCount.style.color = '#6b7280';
+            charCount.style.fontWeight = 'normal';
+        }
+    }
+    
+    descripcionInput.addEventListener('input', updateCharCount);
+
+    function getCSRFToken() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        return csrfToken ? csrfToken.value : '';
+    }
+    </script>
+</body>
+</html>

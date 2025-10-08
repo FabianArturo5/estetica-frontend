@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Trabajos - Estética Lucy SYFAHG</title>
+    <style>
+        :root {
+            --color-50: #F5E7FE;
+            --color-100: #E4BBFC;
+            --color-200: #D38FFA;
+            --color-300: #C163F8;
+            --color-400: #A927F5;
+            --color-500: #9E0BF4;
+            --color-600: #8209C8;
+            --color-700: #65079C;
+            --color-800: #490570;
+            --color-900: #2C0344;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #2C0344;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 120px 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: white;
+            border-bottom: 1px solid rgba(158, 11, 244, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-icon-nav {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-300), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 10px 30px rgba(158, 11, 244, 0.4);
+        }
+
+        .nav-btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(158, 11, 244, 0.6);
+        }
+
+        .nav-btn-secondary {
+            background: transparent;
+            color: var(--color-600);
+            border: 2px solid var(--color-400);
+        }
+
+        .nav-btn-secondary:hover {
+            background: var(--color-50);
+            border-color: var(--color-500);
+            transform: translateY(-2px);
+        }
+
+        /* Partículas flotantes */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-400), transparent);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, -100px) rotate(90deg); }
+            50% { transform: translate(0, -200px) rotate(180deg); }
+            75% { transform: translate(-100px, -100px) rotate(270deg); }
+        }
+
+        /* Header de galería */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .gallery-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--color-600), var(--color-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-subtitle {
+            color: #6b7280;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filtros */
+        .filters-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+            border: 1px solid rgba(158, 11, 244, 0.1);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--color-400);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(169, 39, 245, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-filter {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filter-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 4px 15px rgba(158, 11, 244, 0.25);
+        }
+
+        .btn-filter-primary:hover {
+            background: linear-gradient(135deg, var(--color-600), var(--color-700));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(158, 11, 244, 0.35);
+        }
+
+        .btn-filter-secondary {
+            background: #f9fafb;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-filter-secondary:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        /* Grid de trabajos */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .work-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(158, 11, 244, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .work-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #f9fafb;
+        }
+
+        .work-content {
+            padding: 24px;
+        }
+
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .work-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .work-category {
+            background: var(--color-50);
+            color: var(--color-700);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .work-description {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .work-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .work-tag {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .work-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .work-date {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .work-featured {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Paginación */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .page-btn {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            border-color: var(--color-400);
+            color: var(--color-600);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            border-color: var(--color-500);
+        }
+
+        /* Tags populares */
+        .popular-tags {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+            border: 1px solid rgba(158, 11, 244, 0.1);
+        }
+
+        .tags-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-item {
+            background: var(--color-50);
+            color: var(--color-700);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .tag-item:hover {
+            background: var(--color-100);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 30px 50px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+            background: white;
+            z-index: 1;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--color-300);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-500);
+        }
+
+        /* Estados vacíos */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .empty-description {
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .logo-icon-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .gallery-title {
+                font-size: 36px;
+            }
+
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 100px 15px 20px;
+            }
+
+            .gallery-title {
+                font-size: 28px;
+            }
+
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo-nav">
+            <div class="logo-icon">✨</div>
+            <div class="logo-text">Lucy SYFAHG - Catálogo</div>
+        </div>
+        <div class="nav-actions">
+            <span id="adminBadge" class="admin-badge">⭐ Administrador</span>
+            <a href="{% url 'authentication:dashboard' %}" class="btn btn-primary">← Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+
+    <div class="main-content">
+        <!-- Header -->
+        <div class="gallery-header">
+            <h1 class="gallery-title">Nuestros Trabajos</h1>
+            <p class="gallery-subtitle">Descubre nuestra galería de trabajos realizados. Cada proyecto representa nuestra dedicación y calidad.</p>
+        </div>
+
+        <!-- Tags populares -->
+        {% if tags_populares %}
+        <div class="popular-tags">
+            <h3 class="tags-title">Etiquetas Populares</h3>
+            <div class="tags-grid">
+                {% for tag in tags_populares %}
+                <a href="?tag={{ tag.tag }}" class="tag-item">#{{ tag.tag }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Filtros -->
+        <div class="filters-section">
+            <form method="GET" id="filterForm">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Categoría</label>
+                        <select name="categoria" class="filter-select">
+                            <option value="">Todas las categorías</option>
+                            {% for cat in categorias %}
+                            <option value="{{ cat.value }}" {% if cat.value == categoria_actual %}selected{% endif %}>
+                                {{ cat.label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Buscar</label>
+                        <input type="text" name="search" class="filter-input" placeholder="Buscar trabajos..." value="{{ search_query }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Filtros</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="destacados" value="true" {% if request.GET.destacados %}checked{% endif %}>
+                                <span>Solo destacados</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button type="reset" class="btn-filter btn-filter-secondary" onclick="resetFilters()">
+                        Limpiar
+                    </button>
+                    <button type="submit" class="btn-filter btn-filter-primary">
+                        Aplicar Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Grid de trabajos -->
+        {% if trabajos %}
+        <div class="works-grid">
+            {% for trabajo in trabajos %}
+            <div class="work-card" onclick="window.location.href='{% url 'jobs:detalle' trabajo.id %}'">
+                {% if trabajo.imagenes %}
+                <img src="data:image/jpeg;base64,{{ trabajo.imagenes.0 }}" alt="{{ trabajo.titulo }}" class="work-image">
+                {% else %}
+                <div class="work-image" style="display: flex; align-items: center; justify-content: center; background: var(--color-50); color: var(--color-300);">
+                    <span>📷 Sin imagen</span>
+                </div>
+                {% endif %}
+                
+                <div class="work-content">
+                    <div class="work-header">
+                        <h3 class="work-title">{{ trabajo.titulo }}</h3>
+                        <span class="work-category">{{ trabajo.categoria|title }}</span>
+                    </div>
+                    
+                    <p class="work-description">{{ trabajo.descripcion|default:"Sin descripción" }}</p>
+                    
+                    {% if trabajo.tags %}
+                    <div class="work-tags">
+                        {% for tag in trabajo.tags|slice:":3" %}
+                        <span class="work-tag">#{{ tag }}</span>
+                        {% endfor %}
+                        {% if trabajo.tags|length > 3 %}
+                        <span class="work-tag">+{{ trabajo.tags|length|add:"-3" }}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="work-footer">
+                        <span class="work-date">
+                            {{ trabajo.fecha_realizacion|default:trabajo.created_at|date:"M Y" }}
+                        </span>
+                        {% if trabajo.destacado %}
+                        <span class="work-featured">⭐ Destacado</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        {% if has_prev or has_next %}
+        <div class="pagination">
+            {% if has_prev %}
+            <a href="?page={{ page|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+               class="page-btn">← Anterior</a>
+            {% endif %}
+            
+            <span class="page-btn active">{{ page }}</span>
+            
+            {% if has_next %}
+            <a href="?page={{ page|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+               class="page-btn">Siguiente →</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Estado vacío -->
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3 class="empty-title">No se encontraron trabajos</h3>
+            <p class="empty-description">
+                {% if search_query or categoria_actual or tag_actual %}
+                Intenta ajustar los filtros de búsqueda para ver más resultados.
+                {% else %}
+                Próximamente agregaremos más trabajos a nuestra galería.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>© 2025 Lucy SYFAHG. Todos los derechos reservados.</div>
+            <div class="footer-links">
+                <a href="/terminos">Términos</a>
+                <a href="/privacidad">Privacidad</a>
+                <a href="/contacto">Contacto</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Crear partículas
+    window.addEventListener('load', function() {
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 100 + 50 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+    });
+
+    function resetFilters() {
+        window.location.href = '{% url "jobs:galeria" %}';
+    }
+
+    // Auto-submit al cambiar categoría si hay otros filtros activos
+    document.querySelector('select[name="categoria"]').addEventListener('change', function() {
+        if (this.value || document.querySelector('input[name="search"]').value) {
+            document.getElementById('filterForm').submit();
+        }
+    });
+    </script>
+</body>
+</html>

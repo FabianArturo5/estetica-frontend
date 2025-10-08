@@ -23,4 +23,5 @@ urlpatterns = [
     path('health/', health_check, name='health_check'),
     path('auth/', include('authentication.urls')),  # Incluir las URLs de autenticación
     path('products/', include('products.urls')),
+    path('jobs/', include('jobs.urls')),
     ]
