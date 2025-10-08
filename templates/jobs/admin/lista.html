@@ -697,11 +697,11 @@
                     <a href="{% url 'jobs:admin_editar_trabajo' trabajo.id %}" class="btn-action btn-edit">
                         ✏️ Editar
                     </a>
-                    <button onclick="toggleFeatured('{{ trabajo.id }}', {{ trabajo.destacado|yesno:"true,false" }})" 
+                    <button onclick="toggleFeatured('{{ trabajo.id }}', {{ trabajo.destacado|yesno:'true,false' }})" 
                             class="btn-action btn-featured">
                         {% if trabajo.destacado %}🌟{% else %}⭐{% endif %}
                     </button>
-                    <button onclick="confirmDelete('{{ trabajo.id }}', '{{ trabajo.titulo }}')" 
+                    <button onclick="confirmDelete('{{ trabajo.id }}', '{{ trabajo.titulo|escapejs }}')" 
                             class="btn-action btn-delete">
                         🗑️
                     </button>
@@ -751,6 +751,22 @@
     </footer>
 
     <script>
+    // Función para obtener el CSRF token de las cookies
+    function getCSRFToken() {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, 10) === 'csrftoken=') {
+                    cookieValue = decodeURIComponent(cookie.substring(10));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     // Crear partículas
     window.addEventListener('load', function() {
         const particlesContainer = document.getElementById('particles');
@@ -770,13 +786,19 @@
     // Toggle destacado
     async function toggleFeatured(trabajoId, currentlyFeatured) {
         const newStatus = !currentlyFeatured;
+        const csrfToken = getCSRFToken();
+        
+        if (!csrfToken) {
+            alert('Error: No se encontró el token CSRF. Por favor recarga la página.');
+            return;
+        }
         
         try {
             const response = await fetch(`/jobs/admin/trabajo/${trabajoId}/toggle-destacado/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCSRFToken()
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({
                     destacar: newStatus
@@ -786,16 +808,25 @@
             if (response.ok) {
                 location.reload();
             } else {
-                alert('Error al actualizar el trabajo');
+                const data = await response.json().catch(() => ({}));
+                alert('Error al actualizar el trabajo: ' + (data.error || 'Error desconocido'));
             }
         } catch (error) {
-            alert('Error de conexión');
+            console.error('Error:', error);
+            alert('Error de conexión al actualizar el trabajo');
         }
     }
 
     // Confirmar eliminación
     function confirmDelete(trabajoId, trabajoTitle) {
         if (confirm(`¿Estás seguro de que quieres eliminar el trabajo "${trabajoTitle}"? Esta acción no se puede deshacer.`)) {
+            const csrfToken = getCSRFToken();
+            
+            if (!csrfToken) {
+                alert('Error: No se encontró el token CSRF. Por favor recarga la página.');
+                return;
+            }
+            
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/jobs/admin/eliminar/${trabajoId}/`;
@@ -803,7 +834,7 @@
             const csrfInput = document.createElement('input');
             csrfInput.type = 'hidden';
             csrfInput.name = 'csrfmiddlewaretoken';
-            csrfInput.value = getCSRFToken();
+            csrfInput.value = csrfToken;
             
             form.appendChild(csrfInput);
             document.body.appendChild(form);
@@ -811,11 +842,7 @@
         }
     }
 
-    function getCSRFToken() {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        return csrfToken ? csrfToken.value : '';
-    }
-
+    // Verificar estado de admin
     async function checkAdminStatus() {
         try {
             const response = await fetch('/auth/api/me/');
@@ -824,22 +851,30 @@
                 const isAdmin = userData.is_admin === true;
                 
                 if (!isAdmin) {
-                    // Si no es admin, redirigir a la galería
                     window.location.href = "{% url 'jobs:galeria' %}";
                 }
             } else {
-                // Si hay error de autenticación, redirigir al login
-                {% comment %} window.location.href = "{% url 'auth:login' %}"; {% endcomment %}
+                // Si hay error de autenticación, podrías redirigir al login
+                console.warn('Error verificando autenticación');
             }
         } catch (error) {
             console.error('Error verificando estado de admin:', error);
-            {% comment %} window.location.href = "{% url 'auth:login' %}"; {% endcomment %}
         }
     }
 
     // Ejecutar cuando cargue la página
     document.addEventListener('DOMContentLoaded', function() {
         checkAdminStatus();
+        
+        // Auto-ocultar mensajes después de 5 segundos
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(msg => {
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                msg.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => msg.remove(), 300);
+            }, 5000);
+        });
     });
     </script>
 </body>
