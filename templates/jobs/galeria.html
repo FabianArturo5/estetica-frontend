@@ -558,15 +558,59 @@
                 padding: 20px;
             }
         }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: var(--color-900);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-500), var(--color-600));
+            color: white;
+            box-shadow: 0 10px 30px rgba(158, 11, 244, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(158, 11, 244, 0.6);
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo-nav">
-            <div class="logo-icon">✨</div>
-            <div class="logo-text">Lucy SYFAHG - Catálogo</div>
-        </div>
+        <a href="/auth/dashboard/" class="logo-nav">
+            <div class="logo-icon-nav">✨</div>
+            <div class="logo-text">Lucy SYFAHG</div>
+        </a>
         <div class="nav-actions">
             <span id="adminBadge" class="admin-badge">⭐ Administrador</span>
             <a href="{% url 'authentication:dashboard' %}" class="btn btn-primary">← Dashboard</a>
@@ -730,7 +774,8 @@
 
     <script>
     // Crear partículas
-    window.addEventListener('load', function() {
+    window.addEventListener('load', async function() {
+        await checkAdminStatus();
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 30; i++) {
             const particle = document.createElement('div');
@@ -755,6 +800,23 @@
             document.getElementById('filterForm').submit();
         }
     });
+
+    async function checkAdminStatus() {
+        try {
+            const response = await fetch('/auth/api/me/');
+            if (response.ok) {
+                const userData = await response.json();
+                isAdmin = userData.is_admin === true;
+                
+                if (isAdmin) {
+                    document.getElementById('adminBadge').style.display = 'inline-flex';
+                    document.getElementById('btnCreateProduct').style.display = 'inline-flex';
+                }
+            }
+        } catch (error) {
+            console.error('Error verificando estado de admin:', error);
+        }
+    }
     </script>
 </body>
 </html>

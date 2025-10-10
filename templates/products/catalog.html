@@ -84,6 +84,13 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-nav:hover {
+            transform: scale(1.05);
         }
 
         .logo-icon {
@@ -674,10 +681,10 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo-nav">
+        <a href="/auth/dashboard/" class="logo-nav">
             <div class="logo-icon">✨</div>
-            <div class="logo-text">Lucy SYFAHG - Catálogo</div>
-        </div>
+            <div class="logo-text">Lucy SYFAHG</div>
+        </a>
         <div class="nav-actions">
             <span id="adminBadge" class="admin-badge">⭐ Administrador</span>
             <a href="{% url 'authentication:dashboard' %}" class="btn btn-secondary">← Dashboard</a>

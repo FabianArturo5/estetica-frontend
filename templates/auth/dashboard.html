@@ -613,99 +613,118 @@
         </div>
     </div>
 
-    <script>
-    let currentUser = null;
+<script>
+let currentUser = null;
 
-    // Cargar información del usuario al cargar la página
-    window.addEventListener('load', async function() {
-        await loadUserInfo();
-        loadStats();
-        createParticles();
-    });
-    // Verificar si el usuario es admin y mostrar botones correspondientes
-    async function checkAdminStatus() {
-        try {
-            const response = await fetch('/auth/api/me/', {
-                headers: {
-                    'X-CSRFToken': getCSRFToken()
-                }
-            });
+// Cargar información del usuario al cargar la página
+window.addEventListener('load', async function() {
+    await loadUserInfo();
+    await checkAdminStatus();
+    loadStats();
+    createParticles();
+});
+
+// Verificar si el usuario es admin y mostrar botones correspondientes
+async function checkAdminStatus() {
+    try {
+        const response = await fetch('/auth/api/me/', {
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            console.log('User data:', userData); // Debug
             
-            if (response.ok) {
-                const userData = await response.json();
-                console.log('User data:', userData); // Debug
-                
-                const isAdmin = userData.is_admin === true;
-                console.log('Is admin:', isAdmin); // Debug
-                
-                if (isAdmin) {
-                    const adminBtn = document.getElementById('adminTrabajosBtn');
-                    if (adminBtn) {
-                        adminBtn.style.display = 'inline-flex';
-                        console.log('Admin button shown'); // Debug
-                    }
+            const isAdmin = userData.is_admin === true;
+            console.log('Is admin:', isAdmin); // Debug
+            
+            if (isAdmin) {
+                const adminBtn = document.getElementById('adminTrabajosBtn');
+                if (adminBtn) {
+                    adminBtn.style.display = 'inline-flex';
+                    console.log('Admin button shown'); // Debug
                 }
-            } else {
-                console.error('Error getting user data:', response.status);
             }
-        } catch (error) {
-            console.error('Error verificando estado de admin:', error);
+        } else {
+            console.error('Error getting user data:', response.status);
         }
+    } catch (error) {
+        console.error('Error verificando estado de admin:', error);
     }
+}
 
-    // IMPORTANTE: Llamar DESPUÉS de cargar el usuario
-    window.addEventListener('load', async function() {
-        await loadUserInfo();
-        await checkAdminStatus(); // ← Asegúrate de esperar
-        loadStats();
-        createParticles();
-    });
-    // Crear partículas flotantes
-    function createParticles() {
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.width = Math.random() * 100 + 50 + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            particlesContainer.appendChild(particle);
-        }
+// Crear partículas flotantes
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 100 + 50 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        particlesContainer.appendChild(particle);
     }
+}
 
-    async function loadUserInfo() {
-        try {
-            const response = await fetch('/auth/api/me/', {
-                headers: {
-                    'X-CSRFToken': getCSRFToken()
-                }
-            });
-
-            if (response.ok) {
-                currentUser = await response.json();
-                document.getElementById('userName').textContent = currentUser.full_name || 'Usuario';
-                document.getElementById('userEmail').textContent = currentUser.email || '';
-            } else {
-                showMessage('❌ Sesión expirada. Redirigiendo al login...', 'error');
-                setTimeout(() => {
-                    window.location.href = '/auth/login/';
-                }, 2000);
+async function loadUserInfo() {
+    try {
+        const response = await fetch('/auth/api/me/', {
+            headers: {
+                'X-CSRFToken': getCSRFToken()
             }
-        } catch (error) {
-            console.log('Error cargando usuario:', error);
-            showMessage('❌ Error de conexión. Redirigiendo al login...', 'error');
-            setTimeout(() => {
-                window.location.href = '/auth/login/';
-            }, 2000);
-        }
-    }
+        });
 
-    function showUserInfo() {
-        if (currentUser) {
-            const info = `
+        if (response.ok) {
+            currentUser = await response.json();
+            document.getElementById('userName').textContent = currentUser.full_name || 'Usuario';
+            document.getElementById('userEmail').textContent = currentUser.email || '';
+        } else if (response.status === 401 || response.status === 403) {
+            // Sesión expirada o no autenticado
+            await handleSessionExpired();
+        } else {
+            console.error('Error inesperado:', response.status);
+            showMessage('⚠️ Error al cargar información del usuario', 'error');
+        }
+    } catch (error) {
+        console.error('Error cargando usuario:', error);
+        // Solo mostrar mensaje, no redirigir en errores de red genéricos
+        showMessage('⚠️ Error de conexión', 'error');
+    }
+}
+
+async function handleSessionExpired() {
+    showMessage('❌ Sesión expirada. Cerrando sesión...', 'error');
+    
+    try {
+        // Intentar hacer logout en el backend
+        await fetch('/auth/api/logout/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+    } catch (error) {
+        console.log('Error en logout:', error);
+    }
+    
+    // Limpiar todo el almacenamiento
+    sessionStorage.clear();
+    localStorage.clear();
+    
+    // Esperar un poco y redirigir usando replace para no crear historial
+    setTimeout(() => {
+        window.location.replace('/auth/login/');
+    }, 1500);
+}
+
+function showUserInfo() {
+    if (currentUser) {
+        const info = `
 Información del Usuario:
 ━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -714,76 +733,83 @@ Información del Usuario:
 🆔 ID: ${currentUser.id || 'No disponible'}
 📅 Cuenta creada: ${currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('es-ES') : 'No disponible'}
 🔄 Última actualización: ${currentUser.updated_at ? new Date(currentUser.updated_at).toLocaleDateString('es-ES') : 'No disponible'}
-            `;
-            alert(info);
-        } else {
-            showMessage('❌ No se pudo cargar la información del usuario', 'error');
+        `;
+        alert(info);
+    } else {
+        showMessage('❌ No se pudo cargar la información del usuario', 'error');
+    }
+}
+
+function loadStats() {
+    const accountCreated = currentUser?.created_at ? new Date(currentUser.created_at) : new Date();
+    const today = new Date();
+    const daysDiff = Math.floor((today - accountCreated) / (1000 * 60 * 60 * 24));
+    
+    document.getElementById('loginCount').textContent = Math.floor(Math.random() * 50) + 1;
+    document.getElementById('accountAge').textContent = daysDiff > 0 ? daysDiff : 1;
+    document.getElementById('lastLogin').textContent = 'Hoy';
+    document.getElementById('accountStatus').textContent = '🟢';
+}
+
+function refreshData() {
+    showMessage('🔄 Actualizando datos...', 'success');
+    setTimeout(() => {
+        loadUserInfo();
+        loadStats();
+        showMessage('✅ Datos actualizados correctamente', 'success');
+    }, 1500);
+}
+
+function showSettings() {
+    alert('🚧 Configuración en desarrollo\n\nPronto podrás personalizar:\n• Notificaciones\n• Tema de la aplicación\n• Preferencias de privacidad\n• Configuración de perfil');
+}
+
+function showServices() {
+    alert('💆‍♀️ Servicios Disponibles\n\n✨ Tratamientos Faciales\n💇‍♀️ Estilismo & Color\n💅 Manicure & Pedicure\n🧖‍♀️ Spa & Masajes\n💄 Maquillaje Profesional\n🌟 Tratamientos Corporales');
+}
+
+async function logout() {
+    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+        try {
+            await fetch('/auth/api/logout/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken()
+                }
+            });
+            
+            // Limpiar almacenamiento
+            sessionStorage.clear();
+            localStorage.clear();
+            
+            showMessage('👋 Cerrando sesión...', 'success');
+            setTimeout(() => {
+                window.location.replace('/auth/login/');
+            }, 1500);
+        } catch (error) {
+            // Si falla el logout, igual redirigir
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace('/auth/login/');
         }
     }
+}
 
-    function loadStats() {
-        const accountCreated = currentUser?.created_at ? new Date(currentUser.created_at) : new Date();
-        const today = new Date();
-        const daysDiff = Math.floor((today - accountCreated) / (1000 * 60 * 60 * 24));
-        
-        document.getElementById('loginCount').textContent = Math.floor(Math.random() * 50) + 1;
-        document.getElementById('accountAge').textContent = daysDiff > 0 ? daysDiff : 1;
-        document.getElementById('lastLogin').textContent = 'Hoy';
-        document.getElementById('accountStatus').textContent = '🟢';
-    }
-
-    function refreshData() {
-        showMessage('🔄 Actualizando datos...', 'success');
-        setTimeout(() => {
-            loadUserInfo();
-            loadStats();
-            showMessage('✅ Datos actualizados correctamente', 'success');
-        }, 1500);
-    }
-
-    function showSettings() {
-        alert('🚧 Configuración en desarrollo\n\nPronto podrás personalizar:\n• Notificaciones\n• Tema de la aplicación\n• Preferencias de privacidad\n• Configuración de perfil');
-    }
-
-    function showServices() {
-        alert('💆‍♀️ Servicios Disponibles\n\n✨ Tratamientos Faciales\n💇‍♀️ Estilismo & Color\n💅 Manicure & Pedicure\n🧖‍♀️ Spa & Masajes\n💄 Maquillaje Profesional\n🌟 Tratamientos Corporales');
-    }
-
-    async function logout() {
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-            try {
-                await fetch('/auth/api/logout/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCSRFToken()
-                    }
-                });
-                
-                showMessage('👋 Cerrando sesión...', 'success');
-                setTimeout(() => {
-                    window.location.href = '/auth/login/';
-                }, 1500);
-            } catch (error) {
-                window.location.href = '/auth/login/';
-            }
-        }
-    }
+function showMessage(text, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type}`;
+    messageDiv.style.display = 'block';
     
-    function showMessage(text, type) {
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type}`;
-        messageDiv.style.display = 'block';
-        
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
-    }
-    
-    function getCSRFToken() {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        return csrfToken ? csrfToken.value : '';
-    }
-    </script>
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000);
+}
+
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+    return csrfToken ? csrfToken.value : '';
+}
+</script>
 </body>
 </html>
