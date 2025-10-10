@@ -196,14 +196,14 @@
         /* Galería de imágenes */
         .work-gallery {
             position: relative;
-            background: #000;
+            background: #f8f9fa;
         }
 
         .main-image {
             width: 100%;
             height: 600px;
             object-fit: contain;
-            background: #000;
+            background: #f8f9fa;
             cursor: zoom-in;
             transition: opacity 0.3s ease;
         }
@@ -233,7 +233,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
             z-index: 9999;
-            cursor: zoom-out;
             animation: fadeIn 0.3s ease;
         }
 
@@ -249,14 +248,25 @@
             align-items: center;
             justify-content: center;
             padding: 80px 40px 40px;
+            overflow: auto;
+            cursor: default;
         }
 
         .image-viewer-img {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: none;
+            max-height: none;
+            width: auto;
+            height: auto;
             object-fit: contain;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
             animation: zoomIn 0.3s ease;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        .image-viewer-img.zoomed {
+            cursor: zoom-out;
+            transform: scale(2);
         }
 
         @keyframes zoomIn {
@@ -693,7 +703,7 @@
     <div class="particles" id="particles"></div>
 
     <!-- Visor de imagen completa -->
-    <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer(event)">
+    <div class="image-viewer-overlay" id="imageViewer">
         <button class="image-viewer-close" onclick="closeImageViewer(event)">✕</button>
         {% if trabajo.imagenes and trabajo.imagenes|length > 1 %}
         <button class="image-viewer-nav prev" onclick="changeViewerImage(event, -1)">←</button>
@@ -703,7 +713,7 @@
         </div>
         {% endif %}
         <div class="image-viewer-content" onclick="event.stopPropagation()">
-            <img id="viewerImage" src="" alt="" class="image-viewer-img">
+            <img id="viewerImage" src="" alt="" class="image-viewer-img" onclick="toggleZoom(event)">
         </div>
     </div>
 
@@ -872,6 +882,7 @@
             
             viewerImg.src = `data:image/jpeg;base64,${images[currentImageIndex]}`;
             viewerImg.alt = '{{ trabajo.titulo }}';
+            viewerImg.classList.remove('zoomed');
             
             if (document.getElementById('viewerCurrentImage')) {
                 document.getElementById('viewerCurrentImage').textContent = currentImageIndex + 1;
@@ -887,8 +898,16 @@
             event.stopPropagation();
         }
         const viewer = document.getElementById('imageViewer');
+        const viewerImg = document.getElementById('viewerImage');
+        viewerImg.classList.remove('zoomed');
         viewer.style.display = 'none';
         document.body.style.overflow = 'auto';
+    }
+
+    function toggleZoom(event) {
+        event.stopPropagation();
+        const img = event.target;
+        img.classList.toggle('zoomed');
     }
 
     function changeViewerImage(event, direction) {
@@ -902,6 +921,7 @@
         
         const viewerImg = document.getElementById('viewerImage');
         viewerImg.src = `data:image/jpeg;base64,${images[currentImageIndex]}`;
+        viewerImg.classList.remove('zoomed');
         
         if (document.getElementById('viewerCurrentImage')) {
             document.getElementById('viewerCurrentImage').textContent = currentImageIndex + 1;

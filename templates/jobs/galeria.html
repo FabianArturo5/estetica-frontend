@@ -602,6 +602,22 @@
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 15px 40px rgba(158, 11, 244, 0.6);
         }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-600);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(158, 11, 244, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--color-500);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(158, 11, 244, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -613,6 +629,9 @@
         </a>
         <div class="nav-actions">
             <span id="adminBadge" class="admin-badge">⭐ Administrador</span>
+            <a href="/jobs/admin/" class="btn btn-secondary" id="adminJobsBtn" style="display: none;">
+                ➕ Agregar Trabajo
+            </a>
             <a href="{% url 'authentication:dashboard' %}" class="btn btn-primary">← Dashboard</a>
         </div>
     </nav>
@@ -806,11 +825,14 @@
             const response = await fetch('/auth/api/me/');
             if (response.ok) {
                 const userData = await response.json();
-                isAdmin = userData.is_admin === true;
+                const isAdmin = userData.is_admin === true;
                 
                 if (isAdmin) {
                     document.getElementById('adminBadge').style.display = 'inline-flex';
-                    document.getElementById('btnCreateProduct').style.display = 'inline-flex';
+                    const adminJobsBtn = document.getElementById('adminJobsBtn');
+                    if (adminJobsBtn) {
+                        adminJobsBtn.style.display = 'inline-flex';
+                    }
                 }
             }
         } catch (error) {
