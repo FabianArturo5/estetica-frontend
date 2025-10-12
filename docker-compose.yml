@@ -9,8 +9,8 @@ services:
     volumes:
       - .:/app
     networks:
-      - estetica-backend_estetica_network # ← Nombre exacto de la red
+      - estetica_network
 
 networks:
-  estetica-backend_estetica_network:
-    external: true
+  estetica_network:
+    driver: bridge

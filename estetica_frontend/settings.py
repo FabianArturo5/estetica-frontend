@@ -16,8 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True  # Cambia a False en producción
-ALLOWED_HOSTS = ['http://127.0.0.1:8000']  # Ajusta según tus necesidades
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'django']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -27,8 +26,6 @@ SECRET_KEY = 'django-insecure-m3ap$yk1#(#m@t*jn4hzppyai8v2u1qfrt-of96f(+w==sevu-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -157,7 +154,7 @@ LOGGING = {
     },
 }
 # Configuración para conectar con FastAPI
-FASTAPI_BASE_URL = os.environ.get('FASTAPI_BASE_URL', 'http://fastapi:8000')
+FASTAPI_BASE_URL = os.environ.get('FASTAPI_BASE_URL', 'http://localhost:8000')
 print(f"🔌 Conectando a FastAPI en: {FASTAPI_BASE_URL}")
 CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript acceda a la cookie
 CSRF_COOKIE_NAME = 'csrftoken'

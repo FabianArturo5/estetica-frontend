@@ -5,21 +5,24 @@ WORKDIR /app
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements e instalar dependencias de Python
+# Copiar requirements e instalar dependencias
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el proyecto
+# Copiar el código de la aplicación
 COPY . .
 
-# Crear usuario no root
-RUN useradd -m -u 1000 user
-USER user
+# Crear directorio para archivos estáticos
+RUN mkdir -p staticfiles
 
-# Exponer puerto
-EXPOSE 8000
+# Recolectar archivos estáticos
+RUN python manage.py collectstatic --noinput || true
+
+# Exponer el puerto
+EXPOSE 8001
 
 # Comando para ejecutar la aplicación
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
