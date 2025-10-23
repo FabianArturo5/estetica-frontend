@@ -16,7 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True  # Cambia a False en producción
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'django']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'django', '3.14.1.187']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -162,6 +162,7 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8001',
     'http://127.0.0.1:8001',
+    'hhtp://3.14.1.187:8001',
 ]
 # Session configuration
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
